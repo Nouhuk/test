@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="lo">
+<head>
+    <meta charset="UTF-8">
+    <title>ກິດຈະກຳ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Phetsarath&family=Noto+Sans:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body, input, textarea, button { font-family: 'Phetsarath', 'Noto Sans', sans-serif; }
+        body { padding: 20px; max-width: 800px; margin: 0 auto; }
+        label { cursor: pointer; display: block; margin: 3px 0; }
+        input[type="text"], textarea { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; }
+        .submit-btn { background-color: #28a745; color: white; border: none; padding: 10px 20px; font-size: 16px; border-radius: 5px; cursor: pointer; margin-top: 20px; }
+        #studentResult { margin-top: 20px; padding: 15px; background: #e2f0d9; border: 1px solid #c3e6cb; display: none; }
+    </style>
+</head>
+<body>
+    <form id="studentForm" onsubmit="submitExam(event)">
+        <center>
+            <h2>ສາທາລະນະລັດ ປະຊາທິປະໄຕ ປະຊາຊົນລາວ</h2>
+            <h3>ສັນຕິພາບ ເອກະລາດ ປະຊາທິປະໄຕ ເອກະພາບ ວັດທະນະຖາວອນ</h3>
+            <h2>ກິດຈະກຳ</h2>
+        </center>
+        <p>
+            ຊື່ ແລະ ນາມສະກຸນ: <input type="text" id="studentName" style="width: 200px;" required> 
+            ຫ້ອງຮຽນ: <input type="text" id="studentClass" style="width: 100px;" required>
+        </p>
+        <p><b>• ຄອມພິວເຕີແບ່ງອອກເປັນຈັກປະເພດ?</b></p>
+        <label><input type="radio" name="q1" value="a" required> a. 3 ປະເພດ</label>
+        <label><input type="radio" name="q1" value="b"> b. 4 ປະເພດ</label>
+        <label><input type="radio" name="q1" value="c"> c. 5 ປະເພດ</label>
+        <label><input type="radio" name="q1" value="d"> d. 6 ປະເພດ</label>
+        <p><b>• hard ward ແບ່ງອອກເປັນຈັກປະເພດ?</b></p>
+        <label><input type="radio" name="q2" value="a" required> A. 2 ປະເພດ</label>
+        <label><input type="radio" name="q2" value="b"> B. 3 ປະເພດ</label>
+        <label><input type="radio" name="q2" value="c"> C. 4 ປະເພດ</label>
+        <label><input type="radio" name="q2" value="d"> D. 5 ປະເພດ</label>
+        <p><b>• ສ່ວນປະກອບຫຼັກຂອງການເຮັດວຽກຄອມພິວເຕີປະກອບມີຫຍັງແດ່?</b></p>
+        <label><input type="radio" name="q3" value="i" required> i. ໂປຣເຊສເຊີ, ໜ່ວຍຄວາມຈຳ, ສ່ວນອິນພຸດ/ເອົາຕ໌ພຸດ</label>
+        <label><input type="radio" name="q3" value="ii"> ii. ໂປຣເຊສເຊີ, ໜ່ວຍຄວາມຈຳ, RAM , CPU</label>
+        <label><input type="radio" name="q3" value="iii"> iii. ໂປຣເຊສເຊີ, ໜ່ວຍຄວາມຈຳ, ສ່ວນອິນພຸດ/ເອົາຕ໌ພຸດ, ອຸປະກອນເກັບຂໍ້ມູນ</label>
+        <label><input type="radio" name="q3" value="iv"> iv. ໂປຣເຊສເຊີ, ໜ່ວຍຄວາມຈຳ, ສ່ວນອິນພຸດ/ເອົາຕ໌ພຸດ, ອຸປະກອນເກັບຂໍ້ມູນ, CPU</label>
+        <p><b>a. ຈົ່ງຕອບຄຳຖາມລຸ່ມນີ້</b></p>
+        <label>ຄອມພິວເຕີໝາຍເຖິງຫຍັງ:</label>
+        <textarea id="ans1" rows="3" required></textarea>
+        <p><b>• ຊອບແວໝາຍເຖິງຫຍັງ:</b></p>
+        <textarea id="ans2" rows="2" required></textarea>
+        <p><b>1. ຈົ່ງຕອບຄຳຖາມລຸ່ມນີ້</b></p>
+        <label>ຄອມພິວເຕີແບ່ງອອກເປັນ 4 ປະເພດຄື:   </label>
+        <textarea id="ans3" rows="2" required></textarea>
+        <br>
+        <button type="submit" class="submit-btn">ສົ່ງຄຳຕອບ (Submit)</button>
+    </form>
+    <div id="studentResult"></div>
+    <script>
+        const answers = { q1: 'b', q2: 'c', q3: 'iv' };
+        function submitExam(e) {
+            e.preventDefault();
+            let choiceScore = 0;
+            for (let q in answers) {
+                const selected = document.querySelector(`input[name="${q}"]:checked`);
+                if (selected && selected.value === answers[q]) choiceScore++;
+            }
+            const examData = {
+                name: document.getElementById('studentName').value,
+                className: document.getElementById('studentClass').value,
+                choiceScore: choiceScore,
+                ans1: document.getElementById('ans1').value,
+                ans2: document.getElementById('ans2').value,
+                ans3: document.getElementById('ans3').value,
+                submittedAt: new Date().toLocaleString()
+            };
+            localStorage.setItem('examSubmission', JSON.stringify(examData));
+            const res = document.getElementById('studentResult');
+            res.style.display = 'block';
+            res.innerHTML = `
+                <h3>✅ ສົ່ງຄຳຕອບສຳເລັດ!</h3>
+                <p><b>ຄະແນນປາລະໄນ (Choice):</b> ${choiceScore} / 3 คะแนน</p>
+                <p style="color: #666;">* ສ່ວນຄຳຕອບພາກອັດຕະໄນຂອງນັກຮຽນຖືກສົ່ງໄປຫາອ່ຈານກຳລັງກວດ</p>
+            `;
+        }
+    </script>
+</body>
+</html>
